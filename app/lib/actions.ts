@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-// import { signIn } from '@/auth';
+import { signIn } from '@/auth';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -22,6 +22,7 @@ const FormSchema = z.object({
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ date: true, id: true });
+
 
 // This is temporary
 export type State = {
@@ -108,7 +109,7 @@ export async function updateInvoice(
 }
 
 export async function deleteInvoice(id: string) {
-  // throw new Error('Failed to Delete Invoice');
+//   throw new Error('Failed to Delete Invoice');
 
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;
@@ -119,16 +120,16 @@ export async function deleteInvoice(id: string) {
   }
 }
 
-// export async function authenticate(
-//   prevState: string | undefined,
-//   formData: FormData,
-// ) {
-//   try {
-//     await signIn('credentials', Object.fromEntries(formData));
-//   } catch (error) {
-//     if ((error as Error).message.includes('CredentialsSignin')) {
-//       return 'CredentialsSignin';
-//     }
-//     throw error;
-//   }
-// }
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', Object.fromEntries(formData));
+  } catch (error) {
+    if ((error as Error).message.includes('CredentialsSignin')) {
+      return 'CredentialsSignin';
+    }
+    throw error;
+  }
+}
